@@ -10,6 +10,7 @@ import {
   SQL_TYPE,
   SQL_USER,
 } from './config';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -20,8 +21,9 @@ import {
       username: SQL_USER,
       password: SQL_PASSWORD,
       database: SQL_DATABASE,
-      entities: [`${__dirname}/**/*.entity{.ts, .js}`],
+      entities: [`${__dirname}/**/*.entity{.ts,.js}`],
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
