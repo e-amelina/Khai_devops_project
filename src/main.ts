@@ -1,6 +1,9 @@
 import { config } from 'dotenv';
 config();
 
+console.log(JSON.stringify(process.env));
+
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 

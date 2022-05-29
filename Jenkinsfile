@@ -1,27 +1,44 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:16-alpine'
-      args '-p 3000:3000'
-    }
+  agent any
+  tools { nodejs 'nodejs' }
+  environment {
+    SQLHOST = 'localhost'
+    SQLPORT = '3306'
+    SQLUSER = 'root'
+    SQLPASSWORD = 'password'
+    SQLDATABASE = 'users'
   }
   stages {
-    stage('Install Dependencies') {
+    stage('Install deps') {
       steps {
-        echo 'Installing'
         sh 'npm install'
+      }
+    }
+    stage('Setup Test DB') {
+      steps {
+        sh 'docker stop $(docker ps -a -q)'
+        sh 'docker rm $(docker ps -a -q)'
+        sh 'docker-compose up -d'
       }
     }
     stage('Build') {
       steps {
-        echo 'Building'
         sh 'npm run build'
+      }
+    }
+    stage('Migrate Test DB') {
+      steps {
+        sh 'npm run migration:run'
+      }
+    }
+    stage('Test') {
+      steps {
+        sh 'npm run test'
       }
     }
     stage('Deploy') {
       steps {
-        echo 'Deploying'
-        sh 'npm run srtart'
+        echo 'here should be a deploy script invocatin'
       }
     }
   }
